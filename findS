@@ -1,0 +1,39 @@
+import pandas as pd
+import numpy as np
+
+# Load the CSV file
+data = pd.read_excel('/content/data1.xlsx')
+
+# Extract the attributes (concepts) and target values
+concepts = np.array(data)[:,:-1]
+target = np.array(data)[:,-1]
+
+print("\nConcepts:")
+print(concepts)
+
+print("\nTarget:")
+print(target)
+
+# Function to implement FIND-S algorithm with hypothesis printing at each step
+def train(con, tar):
+    # Initialize the specific hypothesis with the first positive example
+    for i, val in enumerate(tar):
+        if val == 'yes':
+            specific_h = con[i].copy()
+            print(f"\nInitial hypothesis from first positive example: {specific_h}")
+            break
+            
+    # Update the hypothesis based on other positive examples
+    for i, val in enumerate(con):
+        if tar[i] == 'yes':
+            for x in range(len(specific_h)):
+                if val[x] != specific_h[x]:
+                    specific_h[x] = '?'
+            print(f"\nHypothesis after example {i+1}: {specific_h}")
+    return specific_h
+
+# Apply the FIND-S algorithm to the data
+specific_hypothesis = train(concepts, target)
+
+# Display the most specific hypothesis
+print("\nThe most specific hypothesis is:", specific_hypothesis)
